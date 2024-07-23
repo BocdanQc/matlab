@@ -13,8 +13,8 @@ function [features, featurenames] = ExtractFeatures(window)
 %  INPUT
 %    window: An array of 1 x N samples corresponding to accelerometer data.
 %  OUTPUT
-%    features: The array 1 x 8 features listed above.
-%    featurenames: An array of strings for the features names.
+%    features: The array of 1 x 8 features listed above.
+%    featurenames: An array of 1 x 8 strings for the features names.
 
     if (size(window, 1) > size(window, 2))
         window = window';

@@ -7,8 +7,8 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
 %    accuracy: The overall accuracy of the prediction shown by the
 %              confusion matrix.
 %    labels: The names (strings) of each class of the confusion matrix.
-%    background: If set to true, the background color will reflect the
-%                value in the box.
+%    background: [optional] If set to true, the background color will
+%                reflect the value in the box. The default value is true.
 %  OUTPUT
 %     N/A
 
@@ -19,7 +19,7 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
     cmsize = size(cm);
     normcm = cm ./ max(max(cm));
 
-    figure('Name', 'Confusion Matrix');
+    figure('Name', 'Confusion Matrix', 'NumberTitle', 'off');
     clf;
     if (background)
         imagesc(normcm');

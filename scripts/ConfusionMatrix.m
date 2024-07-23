@@ -6,19 +6,17 @@ function cm = ConfusionMatrix(actual, predicted, option)
 %  INPUT
 %    actual: The actual classes.
 %    predicted: The predicted classes.
-%    option: Either 'percentile' or 'count' to format the content of the
-%            confusion matrix.
+%    option: [optional] Either 'percentile' or 'count' to format the content
+%            of the confusion matrix. The default value is 'percentile'.
 %  INPUT
 %    cm: The confusion matrix.
 
-    if (nargin < 3 || ~strcmp(option, 'count'))
-        option ='percentile';
-    end
-    test = size(predicted);
     if (size(predicted) ~= size(actual))
-      size(predicted)
-      size(actual)
       error('ConfusionMatrix: actual and predicted data sizes do not agree.');
+    end
+    
+    if (nargin < 3 || ~strcmp(option, 'count'))
+        option = 'percentile';
     end
   
     sizecm = max(max(predicted), max(actual));
