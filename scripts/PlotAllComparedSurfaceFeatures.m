@@ -3,10 +3,12 @@ function PlotAllComparedSurfaceFeatures(features1, features2, features1names, su
 %  DESCRIPTION
 %    This function displays the 2D representation of each acceleration axis
 %    in time and the 3D representation of the 3 acceleration axis together
+%    for all surfaces.
 %  INPUT
-%    surfaces: An array of 1 x N surfaces data (accelerations) to display.
-%    samplesize: The number of acceleration samples to display.
-%    surfacename: An array of 1 x N names of the surfaces.
+%    features1: First set of features to compare for all surfaces.
+%    features2: Second set of features to compare for all surfaces.
+%    features1names: The names of the features to compare for all surfaces.
+%    surfacenames: [Optional] The name of all the surfaces for both set of features.
 %    isdocked: [Optional] If true, it will dock all the figures in the
 %              figures window. The default value is true.
 %  OUTPUT

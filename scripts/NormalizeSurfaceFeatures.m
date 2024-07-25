@@ -23,7 +23,7 @@ function [normfeatures, normfeaturelabels, normfactors] = NormalizeSurfaceFeatur
             concatenatedfeatures = [];
             % Concatenate the same feature by axis across all surfaces
             for surface = 1 : size(features, 2)
-                concatenatedfeatures = [concatenatedfeatures features{surface}(:, axis, feature)'];
+                concatenatedfeatures = [concatenatedfeatures, features{surface}(:, axis, feature)'];
             end
 
             % Compute a normalization factor over the whole set
@@ -44,6 +44,6 @@ function [normfeatures, normfeaturelabels, normfactors] = NormalizeSurfaceFeatur
     %% Ground Truth information for the samples
     normfeaturelabels = [];
     for surface = 1 : size(features, 2)
-        normfeaturelabels = [normfeaturelabels (surface * ones(1, size(features{surface}, 1)))];
+        normfeaturelabels = [normfeaturelabels, (surface * ones(1, size(features{surface}, 1)))];
     end
 end

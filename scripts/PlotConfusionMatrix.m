@@ -1,12 +1,13 @@
 function PlotConfusionMatrix(cm, accuracy, labels, background)
 %function PlotConfusionMatrix(cm, accuracy, labels, background)
 %  DESCRIPTION
-%    This function will plot a confusion matrix.
+%    This function displays the given confusion matrix.
 %  INPUT
 %    cm: The confusion matrix to display.
 %    accuracy: The overall accuracy of the prediction shown by the
 %              confusion matrix.
-%    labels: The names (strings) of each class of the confusion matrix.
+%    labels: [optional] The names (strings) of each class of the confusion
+%            matrix.
 %    background: [optional] If set to true, the background color will
 %                reflect the value in the box. The default value is true.
 %  OUTPUT
@@ -19,7 +20,7 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
     cmsize = size(cm);
     normcm = cm ./ max(max(cm));
 
-    figure('Name', 'Confusion Matrix', 'NumberTitle', 'off');
+    figure('Name', 'Confusion Matrix');
     clf;
     if (background)
         imagesc(normcm');
@@ -48,9 +49,11 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
     set(gca, 'TickLength', [0.005 0.010]);
     set(gca, 'XTick', 1 : cmsize);
     set(gca, 'YTick', 1 : cmsize);
-    set(gca, 'XTickLabel', labels, 'FontSize', 10);
-    set(gca, 'XTickLabelRotation', 45);
-    set(gca, 'YTickLabel', labels, 'FontSize', 10);
+    if (exist('labels', 'var'))
+        set(gca, 'XTickLabel', labels, 'FontSize', 10);
+        set(gca, 'XTickLabelRotation', 45);
+        set(gca, 'YTickLabel', labels, 'FontSize', 10);
+    end
     
     xlabel('Predicted', 'FontSize', 10);
     ylabel('Actual', 'FontSize', 10);

@@ -33,14 +33,14 @@ function svmmodel = TrainSVMWithSurfaceFeatures(features, featureslabels)
     bestExpC = 0;
     bestExpGamma = 0;
 
-    for expC = 2:0.25:4
-        C = 2^expC;
-        for expGamma = -6:0.25:-4
-            Gamma = 2^expGamma;
+    for expC = 2 : 0.25 : 4
+        C = 2 ^ expC;
+        for expGamma = -6 : 0.25 : -4
+            Gamma = 2 ^ expGamma;
             disp('Testing:')
             fprintf('\tC     = %-.6f\n', C);
             fprintf('\tGamma = %-.6f\n', Gamma);
-            cmd = [ '-v 10 -c ' num2str(C) ' -g ' num2str(Gamma)];
+            cmd = ['-v 10 -c ', num2str(C), ' -g ', num2str(Gamma)];
             CVrate = svmtrain(featureslabels, features, cmd);
             if (CVrate >= bestCVRate)
                 bestCVRate = CVrate;
@@ -51,32 +51,29 @@ function svmmodel = TrainSVMWithSurfaceFeatures(features, featureslabels)
     end
     
     %% 10-fold Cross validation with the best C and Gamma = 1 / number of features
-    disp(' ');
     disp('--- 10-fold Cross validation with the best C and Gamma = 1 / number of features ---');
-    C = 2^bestExpC;
-    Gamma = 1/size(features,2);
+    C = 2 ^ bestExpC;
+    Gamma = 1 / size(features, 2);
     disp('Testing:')
     fprintf('\tC     = %-.6f\n', C);
     fprintf('\tGamma = %-.6f\n', Gamma);
-    cmd = [ '-v 10 -c ' num2str(C) ' -g ' num2str(Gamma)];
+    cmd = ['-v 10 -c ', num2str(C), ' -g ', num2str(Gamma)];
     CVrate = svmtrain(featureslabels, features, cmd);
 
-    bestC = 2^bestExpC;
+    bestC = 2 ^ bestExpC;
     if (CVrate >= bestCVRate)
         bestGamma = Gamma;    
     else
-        bestGamma = 2^bestExpGamma;    
+        bestGamma = 2 ^ bestExpGamma;    
     end
 
-    disp(' ');
     disp('--- Search Results for C and Gamma with 10-fold Cross Validation ---');
     disp('The best values are:');
     fprintf('\tC     = %-.6f\n', bestC);
     fprintf('\tGamma = %-.6f\n', bestGamma);
 
     %% Creating the SVM model based on the best C and Gamma found
-    disp(' ');
     disp('--- Applying the best values of C and Gamma to the full data set through the SVM trainer ---')
-    cmd = ['-c ' num2str(bestC) ' -g ' num2str(bestGamma)];
+    cmd = ['-c ', num2str(bestC), ' -g ', num2str(bestGamma)];
     svmmodel = svmtrain(featureslabels, features, cmd);
 end

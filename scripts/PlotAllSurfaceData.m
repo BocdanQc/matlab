@@ -3,10 +3,11 @@ function PlotAllSurfaceData(surfaces, samplesize, surfacenames, isdocked)
 %  DESCRIPTION
 %    This function displays the 2D representation of each acceleration axis
 %    in time and the 3D representation of the 3 acceleration axis together
+%    for all surfaces.
 %  INPUT
 %    surfaces: An array of 1 x N surfaces data (accelerations) to display.
 %    samplesize: The number of acceleration samples to display.
-%    surfacename: An array of 1 x N names of the surfaces.
+%    surfacenames: [Optional] An array of 1 x N names of the surfaces.
 %    isdocked: [Optional] If true, it will dock all the figures in the
 %              figures window. The default value is true.
 %  OUTPUT

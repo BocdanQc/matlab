@@ -4,9 +4,9 @@ function [cm, accuracy] = TestSVMWithSurfaceFeatures(features, featureslabels, s
 %    This function gets the prediction of the classes based on given model
 %    fed to libsvm.
 %  INPUT
-%    features: The features to validate against the given SVM model.
+%    features: The features to test against the given SVM model.
 %    featureslabels: The labels (classes) of the features.
-%    svmmodel: The trained model to test the validation features.
+%    svmmodel: The trained model to do the predictions.
 %  OUTPUT
 %    cm: The Confusion Matrix
 %    accuracy: The accuracy of the predictions provided by libsvm
@@ -17,7 +17,6 @@ function [cm, accuracy] = TestSVMWithSurfaceFeatures(features, featureslabels, s
     end
 
     %% Predicting the classes based on the trained model.
-    disp(' ');
     disp('--- Predicting the classes based on the trained model. ---')
     [predictedlabels, accuracy, ~] = svmpredict(featureslabels, features, svmmodel);
 
