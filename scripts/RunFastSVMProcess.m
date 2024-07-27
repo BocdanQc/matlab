@@ -21,9 +21,9 @@ end
 %   +-                          -+
 %FeaturesToKeep = 1 : 21;
 %FeaturesToKeep = [1 3 5 6 7 8 10 11 12 13 14 15 16 18 19 20 21];
-%FeaturesToKeep = [1 3 5 7 8 10 12 14 15 17 19 21];
+FeaturesToKeep = [1 3 5 7 8 10 12 14 15 17 19 21];
 %FeaturesToKeep = [1 3 6 7 8 10 13 14 15 17 20 21];
-FeaturesToKeep = [2 3 4 5 9 10 11 12 16 17 18 19];
+%FeaturesToKeep = [2 3 4 5 9 10 11 12 16 17 18 19];
 
 NormFeaturesTrainUsed = NormFeaturesTrain(:, FeaturesToKeep);
 
@@ -70,7 +70,7 @@ FastSVMModel = svmtrain(NormFeatureLebelsTrainEven, NormFeaturesTrainEven, cmd);
 TrainOddCM = ConfusionMatrix(NormFeatureLebelsTrainOdd', TrainOddPredictedLabels') * 100.0;
 
 % Display the classification results.
-PlotConfusionMatrix(TrainOddCM', TrainOddAccuracy(1), SurfaceNames);
+PlotConfusionMatrix(TrainOddCM', TrainOddAccuracy(1), SurfaceNames, false);
 
 %% Predictions with the fast model on the reduced test data set
 [PredictedLabels, FastAccuracy, ~] = svmpredict(NormFeatureLabelsTestUsed, NormFeaturesTestUsed, FastSVMModel);
@@ -79,4 +79,4 @@ PlotConfusionMatrix(TrainOddCM', TrainOddAccuracy(1), SurfaceNames);
 FastCM = ConfusionMatrix(NormFeatureLabelsTestUsed', PredictedLabels') * 100.0;
     
 % Display the classification results.
-PlotConfusionMatrix(FastCM', FastAccuracy(1), SurfaceNames);
+PlotConfusionMatrix(FastCM', FastAccuracy(1), SurfaceNames, false);

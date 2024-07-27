@@ -23,7 +23,7 @@ for hue = 0 : 0.07 : 1.0
 end
 
 % Plot the data set, with PCA transformation, in 3D
-figure('Name', 'PCA Transformation', 'NumberTitle', 'off');
+figure('Name', 'PCA Transformation');
 for i = 1 : max(NormFeatureLabelsTrain)
     indextokeep = find(i == NormFeatureLabelsTrain);
     plot3(PCAData(1, indextokeep), PCAData(2, indextokeep), PCAData(3, indextokeep), '.', 'MarkerEdgeColor', colors{i});
@@ -42,7 +42,7 @@ for i = 1 : max(NormFeatureLabelsTrain)
 end
 
 % Then evaluate the probability for each sample
-for sample = 1 : size(TransformedData,2)
+for sample = 1 : size(PCAData, 2)
     for i = 1 : max(NormFeatureLabelsTrain)
         Predictions(sample, i) = mvnpdf(PCAData(:, sample)', Means{i}, Covs{i});
     end
@@ -57,5 +57,4 @@ SuccessRate = 100 * sum(PredictedLabels == NormFeatureLabelsTrain) / size(PCADat
 PCAGaussianFitCM = ConfusionMatrix(NormFeatureLabelsTrain, PredictedLabels) * 100.0;
 
 fprintf('Classification for PCA with 3 dimensions kept (no mean), Gaussian fit: %.2f percent\n', SuccessRate);
-PlotConfusionMatrix(PCAGaussianFitCM, SuccessRate, SurfaceNames)
-
+PlotConfusionMatrix(PCAGaussianFitCM', SuccessRate, SurfaceNames, false);

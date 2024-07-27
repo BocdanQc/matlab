@@ -31,9 +31,6 @@ end
 %% Display all the extracted surface features for all axis and for all surface data.
 PlotAllComparedSurfaceFeatures(FeaturesTrain, FeaturesTest, FeatureNamesTrain, SurfaceNames);
 
-%% Display the Mean, the Average, and the Sum of High Frequencies on the Y axis for all surface data used to train libsvm.
-PlotSelectedSurfaceFeatures(FeaturesTrain, FeatureNamesTrain);
-
 %% Normalize the surface features for libsvm training and testing. The Mean feature is removed from the data sets.
 if (~exist('NormFeaturesTrain','var') || ~exist('NormFeaturesTest','var'))
     [NormFeaturesTrain, NormFeatureLabelsTrain, NormFactors] = NormalizeSurfaceFeatures(FeaturesTrain, FeatureNamesTrain);
@@ -51,4 +48,4 @@ if (~exist('CM','var') || ~exist('Accuracy','var'))
 end
 
 %% Display the classification results.
-PlotConfusionMatrix(CM', Accuracy(1), SurfaceNames);
+PlotConfusionMatrix(CM', Accuracy(1), SurfaceNames, false);

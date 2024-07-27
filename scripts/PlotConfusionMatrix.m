@@ -12,6 +12,8 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
 %                reflect the value in the box. The default value is true.
 %  OUTPUT
 %     N/A
+    WIDTH  = 1280;
+    HEIGHT = 720;
 
     if (nargin < 4)
         background = true;
@@ -20,23 +22,23 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
     cmsize = size(cm);
     normcm = cm ./ max(max(cm));
 
-    figure('Name', 'Confusion Matrix');
-    clf;
+    scrsize = get(groot,'ScreenSize');
+    figure('Name', 'Confusion Matrix', 'Position', [(scrsize(3) - WIDTH) / 2, (scrsize(4) - HEIGHT) / 2, WIDTH, HEIGHT]);
+
     if (background)
         imagesc(normcm');
-        lightgray = [0.40 0.40 0.40
-                     0.45 0.45 0.45
-                     0.50 0.50 0.50
-                     0.55 0.55 0.55
-                     0.60 0.60 0.60
-                     0.65 0.65 0.65
-                     0.70 0.70 0.70
-                     0.75 0.75 0.75
-                     0.80 0.80 0.80
-                     0.85 0.85 0.85
-                     0.90 0.90 0.90
-                     0.95 0.95 0.95
-                     1.00 1.00 1.00];
+        lightgray = [0.350 0.350 0.350
+                     0.500 0.500 0.500
+                     0.600 0.600 0.600
+                     0.700 0.700 0.700
+                     0.750 0.750 0.750
+                     0.800 0.800 0.800
+                     0.850 0.850 0.850
+                     0.900 0.900 0.900
+                     0.925 0.925 0.925
+                     0.950 0.950 0.950
+                     0.975 0.975 0.975
+                     1.000 1.000 1.000];
         colormap(lightgray);
     else
         imagesc(ones(cmsize));
@@ -45,8 +47,6 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
 
     title(sprintf('Confusion Matrix\n(Accuracy = %.2f%%)\n', accuracy));
 
-    set(gca, 'TickDir', 'out');
-    set(gca, 'TickLength', [0.005 0.010]);
     set(gca, 'XTick', 1 : cmsize);
     set(gca, 'YTick', 1 : cmsize);
     if (exist('labels', 'var'))
@@ -57,18 +57,39 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
     
     xlabel('Predicted', 'FontSize', 10);
     ylabel('Actual', 'FontSize', 10);
+
+    if (background)
+        set(gca, 'TickDir', 'out');
+        set(gca, 'TickLength', [0.005 0.010]);
+    else
+        set(gca, 'TickDir', 'in');
+        set(gca, 'TickLength', [0.0 0.0]);
+        set(gca, 'GridColor', 'white');
+        set(gca, 'XGrid', 'on');
+        set(gca, 'YGrid', 'on');
+        set(gca, 'MinorGridLineStyle', '-');
+        set(gca, 'MinorGridColor', 'blue');
+        ax = get(gca, 'XAxis');
+        ax.MinorTickValues = 0.5 : cmsize - 0.5;
+        ax = get(gca, 'YAxis');
+        ax.MinorTickValues = 0.5 : cmsize - 0.5;
+        set(gca, 'XMinorGrid', 'on');
+        set(gca, 'YMinorGrid', 'on');
+    end
+    
     
     for i = 1 : cmsize
         for j = 1 : cmsize
             if (background && normcm(i, j) < 0.2)
-                color = 'w';
+                color = 'white';
             else
-                color = 'k';
+                color = 'black';
             end
-            str = ' ';
             value = cm(i, j);
-            if (value >= 0.1)
+            if (value >= 0.05)
                 str = sprintf('%.1f%', value);
+            else
+                str = ' ';
             end
             text(i, j, str , 'FontSize', 8, 'Color', color, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
         end
