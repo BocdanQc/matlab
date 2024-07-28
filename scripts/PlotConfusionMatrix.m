@@ -1,21 +1,20 @@
-function PlotConfusionMatrix(cm, accuracy, labels, background)
-%function PlotConfusionMatrix(cm, accuracy, labels, background)
+function PlotConfusionMatrix(cm, labels, background)
+%function PlotConfusionMatrix(cm, labels, background)
 %  DESCRIPTION
 %    This function displays the given confusion matrix.
 %  INPUT
 %    cm: The confusion matrix to display.
-%    accuracy: The overall accuracy of the prediction shown by the
-%              confusion matrix.
 %    labels: [optional] The names (strings) of each class of the confusion
 %            matrix.
 %    background: [optional] If set to true, the background color will
 %                reflect the value in the box. The default value is true.
 %  OUTPUT
 %     N/A
+
     WIDTH  = 1280;
     HEIGHT = 720;
 
-    if (nargin < 4)
+    if (nargin < 3)
         background = true;
     end
     
@@ -44,8 +43,6 @@ function PlotConfusionMatrix(cm, accuracy, labels, background)
         imagesc(ones(cmsize));
         colormap(white);
     end
-
-    title(sprintf('Confusion Matrix\n(Accuracy = %.2f%%)\n', accuracy));
 
     set(gca, 'XTick', 1 : cmsize);
     set(gca, 'YTick', 1 : cmsize);

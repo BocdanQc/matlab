@@ -57,26 +57,25 @@ end
 %% Train libsvm with the reduced data set (even indexes).
 % Set the default values for C and Gamma.
 % (These values are based on previous experimentations.)
-C = 4;
-Gamma = 1 / size(FeaturesToKeep, 2);
+DefaultC = 2^4;
+DefaultGamma = 1 / size(FeaturesToKeep, 2);
 
-cmd = ['-c ', num2str(C), ' -g ', num2str(Gamma)];
-FastSVMModel = svmtrain(NormFeatureLebelsTrainEven, NormFeaturesTrainEven, cmd);
+FastSVMModel = svmtrain(NormFeatureLebelsTrainEven, NormFeaturesTrainEven, ['-c ', num2str(DefaultC), ' -g ', num2str(DefaultGamma)]);
 
 %% Predictions with the fast model on the reduced train data set (odd indexes)
 [TrainOddPredictedLabels, TrainOddAccuracy, ~] = svmpredict(NormFeatureLebelsTrainOdd, NormFeaturesTrainOdd, FastSVMModel);
 
 % Creating the Confusion Matrix with the actual labels vs the predicted labels
-TrainOddCM = ConfusionMatrix(NormFeatureLebelsTrainOdd', TrainOddPredictedLabels') * 100.0;
+TrainOddConfusionMatrix = ConfusionMatrix(NormFeatureLebelsTrainOdd', TrainOddPredictedLabels') * 100.0;
 
 % Display the classification results.
-PlotConfusionMatrix(TrainOddCM', TrainOddAccuracy(1), SurfaceNames, false);
+PlotConfusionMatrix(TrainOddConfusionMatrix', SurfaceNames, false);
 
 %% Predictions with the fast model on the reduced test data set
-[PredictedLabels, FastAccuracy, ~] = svmpredict(NormFeatureLabelsTestUsed, NormFeaturesTestUsed, FastSVMModel);
+[PredictedLabels, FastSVMAccuracy, ~] = svmpredict(NormFeatureLabelsTestUsed, NormFeaturesTestUsed, FastSVMModel);
 
 % Creating the Confusion Matrix with the actual labels vs the predicted labels
-FastCM = ConfusionMatrix(NormFeatureLabelsTestUsed', PredictedLabels') * 100.0;
+FastSVMConfusionMatrix = ConfusionMatrix(NormFeatureLabelsTestUsed', PredictedLabels') * 100.0;
     
 % Display the classification results.
-PlotConfusionMatrix(FastCM', FastAccuracy(1), SurfaceNames, false);
+PlotConfusionMatrix(FastSVMConfusionMatrix', SurfaceNames, false);
