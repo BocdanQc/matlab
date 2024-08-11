@@ -35,7 +35,7 @@ function svmmodel = TrainSVMWithSurfaceFeatures(features, featureslabels, vararg
 %                is too high.
 %
 %    Note: A coarse Grid Search was previously tested with C = 2^-5 to 2^15
-%          and Gamma = 2^-15 to 2^3, both with an exponent increment of 1).
+%          and Gamma = 2^-15 to 2^3, both with an exponent increment of 2).
 %    
 %  INPUT
 %    features: The features used to train libsvm
