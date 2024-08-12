@@ -43,15 +43,33 @@ if (~exist('NormFeaturesTrain','var') || ~exist('NormFeaturesTest','var'))
     [NormFeaturesTest, NormFeatureLabelsTest, ~] = NormalizeSurfaceFeatures(FeaturesTest, FeatureNamesTest, NormFactors);
 end
 
-%% Train the libsvm with the surface features for training with the already known best values for C and Gamma.
+%% Split the training data evenly into 2 sets: odd indexes and even indexes
+IndexEven = (1 : floor(size(NormFeaturesTrain, 1) / 2)) * 2;
+IndexOdd = IndexEven - 1;
+
+NormFeaturesTrainOdd = NormFeaturesTrain(IndexOdd, :);
+NormFeatureLebelsTrainOdd = NormFeatureLabelsTrain(:, IndexOdd);
+
+NormFeaturesTrainEven = NormFeaturesTrain(IndexEven, :);
+NormFeatureLebelsTrainEven = NormFeatureLabelsTrain(:, IndexEven);
+
+%% Train the SVM with the reduced train data set (odd indexes) with the already known best values for C and Gamma.
 if (~exist('SVMModel','var'))
-    SVMModel = TrainSVMWithSurfaceFeatures(NormFeaturesTrain, NormFeatureLabelsTrain, 'C', 2^4, 'Gamma', 2^-5.75);
+    SVMModel = TrainSVMWithSurfaceFeatures(NormFeaturesTrainOdd, NormFeatureLebelsTrainOdd, 'C', 2^4, 'Gamma', 2^-5.75);
 end
 
-%% Test the libsvm model with the surface features for testing
-if (~exist('CM','var') || ~exist('Accuracy','var'))
+%% Verify the SVM model on the reduced train data set (even indexes)
+if (~exist('SVMConfusionMatrixPractice','var') || ~exist('SVMAccuracyPractice','var'))
+    [SVMConfusionMatrixPractice, SVMAccuracyPractice] = TestSVMWithSurfaceFeatures(NormFeaturesTrainEven, NormFeatureLebelsTrainEven, SVMModel);
+end
+% Display the classification verification results.
+disp(['The prediction success rate of the SVM model on the Practice Data Set is ', num2str(SVMAccuracyPractice(1)),'%']);
+PlotConfusionMatrix(SVMConfusionMatrixPractice', SurfaceNames);
+
+%% Validate the SVM model with the surface features for testing
+if (~exist('SVMConfusionMatrix','var') || ~exist('SVMAccuracy','var'))
     [SVMConfusionMatrix, SVMAccuracy] = TestSVMWithSurfaceFeatures(NormFeaturesTest, NormFeatureLabelsTest, SVMModel);
 end
-
-%% Display the classification results.
+% Display the classification validation results.
+disp(['The prediction success rate of the SVM model on the Test Data Set is ', num2str(SVMAccuracy(1)),'%']);
 PlotConfusionMatrix(SVMConfusionMatrix', SurfaceNames, false);

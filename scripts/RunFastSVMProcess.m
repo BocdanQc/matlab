@@ -25,57 +25,17 @@ FeaturesToKeep = [1 3 5 7 8 10 12 14 15 17 19 21];
 %FeaturesToKeep = [1 3 6 7 8 10 13 14 15 17 20 21];
 %FeaturesToKeep = [2 3 4 5 9 10 11 12 16 17 18 19];
 
-NormFeaturesTrainUsed = NormFeaturesTrain(:, FeaturesToKeep);
+NormFeaturesTrainReduced = NormFeaturesTrain(:, FeaturesToKeep);
+NormFeaturesTestReduced = NormFeaturesTest(:, FeaturesToKeep);
 
-% Keep even indexes of the features to keep for training
-IndexToKeep = (1 : floor(size(NormFeaturesTrain, 1) / 2)) * 2;
-NormFeaturesTrainEven = NormFeaturesTrainUsed(IndexToKeep, :);
-if (size(NormFeatureLabelsTrain, 1) == 1)
-    NormFeatureLebelsTrainEven = NormFeatureLabelsTrain';
-    NormFeatureLebelsTrainEven = NormFeatureLebelsTrainEven(IndexToKeep);
-else
-    NormFeatureLebelsTrainEven = NormFeatureLebelsTrainEven(IndexToKeep);
-end
-
-% Keep odd indexes of the features to keep for verification
-IndexToKeep = IndexToKeep - 1;
-NormFeaturesTrainOdd = NormFeaturesTrainUsed(IndexToKeep, :);
-if (size(NormFeatureLabelsTrain, 1) == 1)
-    NormFeatureLebelsTrainOdd = NormFeatureLabelsTrain';
-    NormFeatureLebelsTrainOdd = NormFeatureLebelsTrainOdd(IndexToKeep);
-else
-    NormFeatureLebelsTrainOdd = NormFeatureLebelsTrainOdd(IndexToKeep);
-end
-
-NormFeaturesTestUsed = NormFeaturesTest(:, FeaturesToKeep);
-if (size(NormFeatureLabelsTest, 1) == 1)
-    NormFeatureLabelsTestUsed = NormFeatureLabelsTest';
-else
-    NormFeatureLabelsTestUsed = NormFeatureLabelsTest;
-end
-
-%% Train libsvm with the reduced data set (even indexes).
+%% Train the SVM with the reduced data set.
 % Set the default values for C and Gamma.
 % (These values are based on previous experimentations.)
 DefaultC = 2^4;
 DefaultGamma = 1 / size(FeaturesToKeep, 2);
+SVMModelReduced = TrainSVMWithSurfaceFeatures(NormFeaturesTrainReduced, NormFeatureLabelsTrain, 'C', DefaultC, 'Gamma', DefaultGamma);
 
-FastSVMModel = svmtrain(NormFeatureLebelsTrainEven, NormFeaturesTrainEven, ['-c ', num2str(DefaultC), ' -g ', num2str(DefaultGamma)]);
-
-%% Predictions with the fast model on the reduced train data set (odd indexes)
-[TrainOddPredictedLabels, TrainOddAccuracy, ~] = svmpredict(NormFeatureLebelsTrainOdd, NormFeaturesTrainOdd, FastSVMModel);
-
-% Creating the Confusion Matrix with the actual labels vs the predicted labels
-TrainOddConfusionMatrix = ConfusionMatrix(NormFeatureLebelsTrainOdd', TrainOddPredictedLabels') * 100.0;
-
-% Display the classification results.
-PlotConfusionMatrix(TrainOddConfusionMatrix', SurfaceNames, false);
-
-%% Predictions with the fast model on the reduced test data set
-[PredictedLabels, FastSVMAccuracy, ~] = svmpredict(NormFeatureLabelsTestUsed, NormFeaturesTestUsed, FastSVMModel);
-
-% Creating the Confusion Matrix with the actual labels vs the predicted labels
-FastSVMConfusionMatrix = ConfusionMatrix(NormFeatureLabelsTestUsed', PredictedLabels') * 100.0;
+%% Predictions with the SVM model on the reduced test data set
+[SVMConfusionMatrixReduced, SVMAccuracyReduced] = TestSVMWithSurfaceFeatures(NormFeaturesTestReduced, NormFeatureLabelsTest, SVMModelReduced);
     
-% Display the classification results.
-PlotConfusionMatrix(FastSVMConfusionMatrix', SurfaceNames, false);
+PlotConfusionMatrix(SVMConfusionMatrixReduced', SurfaceNames);
